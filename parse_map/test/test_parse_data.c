@@ -25,6 +25,10 @@ int	main(int argc, char **argv)
 	printf("=== Testing parse_data with: %s ===\n", argv[1]);
 	ret = parse_data(fd, &info);
 	printf("\n=== Result: %d ===\n", ret);
+	if (ret == 1)
+		printf("✓ Parse succeeded\n");
+	else
+		printf("✗ Parse failed\n");
 	close(fd);
 	map_info_destroy(&info);
 	return (ret < 0 ? 1 : 0);

@@ -67,23 +67,17 @@ int	main(void)
 	ok &= expect_ok("col_size==5", b.col_size == 5);
 	ok &= expect_ok("lines[3]==NULL", b.lines && b.lines[3] == NULL);
 	ok &= expect_streq("lines[2]==\"10001\"", b.lines[2], "10001");
-	/* return_map: 所有権移譲 */
 	map = map_builder_return_map(&b);
 	ok &= expect_ok("return_map not NULL", map != NULL);
 	ok &= expect_ok("builder emptied: lines==NULL", b.lines == NULL);
 	ok &= expect_ok("builder emptied: row_size==0", b.row_size == 0);
 	ok &= expect_ok("builder emptied: col_size==0", b.col_size == 0);
-	/* map の内容確認（NULL終端含む） */
 	ok &= expect_streq("map[0]==\"1111\"", map[0], "1111");
 	ok &= expect_streq("map[1]==\"10 1\"", map[1], "10 1");
 	ok &= expect_streq("map[2]==\"10001\"", map[2], "10001");
 	ok &= expect_ok("map[3]==NULL", map[3] == NULL);
 	free_map(map);
-	/* destroy が安全に動くか（空の builder を destroy） */
 	map_builder_destroy(&b);
 	ok &= expect_ok("destroy empty builder ok", 1);
 	return (ok ? 0 : 1);
 }
-
-// cc -Wall -Wextra -Werror map_builder.c test_map_builder.c -o test_builder
-// ./test_builder

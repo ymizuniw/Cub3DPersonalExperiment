@@ -49,31 +49,26 @@ int	main(void)
 	ok &= expect_ok("C spaces", process_color_line(&info, J_ELEM_C,
 				"C 225,30,0  "));
 	ok &= expect_rgb("C value", info.ceiling_color, 225, 30, 0);
-	// irregular: duplication
 	ok &= expect_ko("F duplicate", process_color_line(&info, J_ELEM_F,
 				"F 0,0,0"));
-	// irregular: lacking
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("F missing value", process_color_line(&tmp, J_ELEM_F,
 					"F "));
 		map_info_destroy(&tmp);
 	}
-	// irregular: out of range
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("C overflow", process_color_line(&tmp, J_ELEM_C,
 					"C 256,0,0"));
 		map_info_destroy(&tmp);
 	}
-	// irregular: format
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("F bad format", process_color_line(&tmp, J_ELEM_F,
 					"F 10,20"));
 		map_info_destroy(&tmp);
 	}
-	// irregular: extra token
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("C extra token", process_color_line(&tmp, J_ELEM_C,

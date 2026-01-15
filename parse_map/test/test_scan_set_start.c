@@ -2,10 +2,6 @@
 #include <stdbool.h>
 #include "../includes/map_info.h"
 #include "../includes/map_scan_set_start.h"
-
-//cc -Wall -Wextra -Werror test_scan_set_start.c ../map_scan_set_start.c 
-
-/* test_map_scan_set_start_v2.c */
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -48,7 +44,6 @@ int main(void)
 {
     int ok = 1;
 
-    /* Case 1: single start N */
     {
         char map[] =
             "1111 "
@@ -64,7 +59,6 @@ int main(void)
         ok &= expect_ch("case1 dir=='N'", dir, 'N');
     }
 
-    /* Case 2: start at (0,0) direction E */
     {
         char map[] =
             "E111"
@@ -80,7 +74,6 @@ int main(void)
         ok &= expect_ch("case2 dir=='E'", dir, 'E');
     }
 
-    /* Case 3: multiple starts -> -1 */
     {
         char map[] =
             "1111"
@@ -94,7 +87,6 @@ int main(void)
         ok &= expect_rc("case3 rc==-1", rc, -1);
     }
 
-    /* Case 4: no start -> -1 and keep defaults */
     {
         char map[] =
             "111"

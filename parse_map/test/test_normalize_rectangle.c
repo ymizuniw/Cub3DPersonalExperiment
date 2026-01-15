@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//cc -Wall -Wextra -Werror test_normalize_rectangle.c ../map_normalize_rectangle.c
-
 static int expect_ok(const char *name, int cond)
 {
     if (cond)
@@ -44,18 +42,11 @@ int main(void)
 {
     int ok = 1;
 
-    //ragged rows, pad with spaces
     char *map[] = {"1111", "10 1", "10001", NULL};
     int row_max = 3;
     int col_max = 5;
     char *g = map_normalize_rectangle(map, row_max, col_max);
     ok &= expect_ok("case1 alloc", g != NULL);
-    /*
-        expected 3*5:
-        "1111 "
-        "10 1 "
-        "10001"
-    */
     ok &= expect_cell("case1 [0,4] pad space", g, col_max, 0,4, ' ');
     ok &= expect_cell("case1 [1,2] space kept", g, col_max, 1,2,' ');
     ok &= expect_cell("case1 [2,4] last char", g, col_max, 2,4,'1');
@@ -67,7 +58,6 @@ int main(void)
             ok &= expect_mem_eq("case1 full grid", g, exp, sizeof(exp));
     }
     free(g);
-        /* Case 2: col_max shorter than some rows -> truncation */
     {
         char *map[] = { "ABCDE", "XYZ", NULL };
         int row_max = 2;
@@ -76,10 +66,6 @@ int main(void)
         char *g = map_normalize_rectangle(map, row_max, col_max);
         ok &= expect_ok("case2 alloc", g != NULL);
 
-        /* expected 2x3:
-           "ABC"
-           "XYZ"
-        */
         ok &= expect_cell("case2 [0,2] 'C'", g, col_max, 0, 2, 'C');
         ok &= expect_cell("case2 [1,2] 'Z'", g, col_max, 1, 2, 'Z');
 
@@ -91,7 +77,6 @@ int main(void)
         free(g);
     }
 
-    /* Case 3: empty strings */
     {
         char *map[] = { "", "", NULL };
         int row_max = 2;
@@ -100,7 +85,6 @@ int main(void)
         char *g = map_normalize_rectangle(map, row_max, col_max);
         ok &= expect_ok("case3 alloc", g != NULL);
 
-        /* all spaces */
         for (int r = 0; r < row_max; r++)
             for (int c = 0; c < col_max; c++)
                 ok &= expect_cell("case3 cell space", g, col_max, r, c, ' ');
@@ -108,7 +92,6 @@ int main(void)
         free(g);
     }
 
-    /* Case 4: verify no hidden terminators (not NUL-terminated rows) */
     {
         char *map[] = { "1", NULL };
         int row_max = 1;

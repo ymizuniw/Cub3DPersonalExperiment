@@ -67,8 +67,3 @@ int	main(void)
 		return (1);
 	return (0);
 }
-
-/*
-	cc -Wall -Wextra -Werror judge_data.c test_judge_data.c -o test_judge
-	./test_judge
-*/

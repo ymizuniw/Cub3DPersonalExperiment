@@ -19,32 +19,49 @@ cc -Wall -Wextra -Werror -I"$SRC/includes" \
     "$SRC/map_scan_set_start.c" \
     "$SRC/map_validate_closed.c" \
     "$SRC/process_texture_color.c" \
+    "$SRC/ft_putstr_fd.c" \
     -o "$DIR/test_parse_data"
 
 echo ""
-echo "=== Test 1: valid_simple.cub ==="
-"$DIR/test_parse_data" "$DIR/data/valid_simple.cub"
 
-echo ""
-echo "=== Test 2: valid_with_empty_lines.cub ==="
-"$DIR/test_parse_data" "$DIR/data/valid_with_empty_lines.cub"
+# Run tests with automatic pass/fail detection
+TOTAL=0
+PASSED=0
 
-echo ""
-echo "=== Test 3: valid_with_spaces.cub ==="
-"$DIR/test_parse_data" "$DIR/data/valid_with_spaces.cub"
-
-echo ""
-echo "=== Test 4: missing_ceiling.cub (should fail) ==="
-"$DIR/test_parse_data" "$DIR/data/missing_ceiling.cub" || echo "Expected failure: missing ceiling"
-
-echo ""
-echo "=== Test 5: invalid_element.cub (should fail) ==="
-"$DIR/test_parse_data" "$DIR/data/invalid_element.cub" || echo "Expected failure: invalid element"
-
-echo ""
-echo "=== Test 6: invalid_map_char.cub (should fail) ==="
-"$DIR/test_parse_data" "$DIR/data/invalid_map_char.cub" || echo "Expected failure: invalid map char"
+for cubfile in "$DIR/data"/*.cub; do
+    basename=$(basename "$cubfile" .cub)
+    expectfile="$DIR/data/$basename.expect"
+    
+    if [ ! -f "$expectfile" ]; then
+        echo "=== WARNING: No .expect file for $basename.cub, skipping ==="
+        continue
+    fi
+    
+    TOTAL=$((TOTAL + 1))
+    expect_exit=$(cat "$expectfile")
+    
+    echo "=== Test $TOTAL: $basename.cub (expect exit=$expect_exit) ==="
+    
+    if "$DIR/test_parse_data" "$cubfile"; then
+        actual_exit=0
+    else
+        actual_exit=1
+    fi
+    
+    if [ "$actual_exit" -eq "$expect_exit" ]; then
+        echo "✓ PASS: exit code matched ($actual_exit)"
+        PASSED=$((PASSED + 1))
+    else
+        echo "✗ FAIL: expected exit=$expect_exit, got exit=$actual_exit"
+    fi
+    echo ""
+done
 
 rm -f "$DIR/test_parse_data"
-echo ""
-echo "=== All tests completed ==="
+
+echo "=== Summary: $PASSED/$TOTAL tests passed ==="
+if [ "$PASSED" -eq "$TOTAL" ]; then
+    exit 0
+else
+    exit 1
+fi

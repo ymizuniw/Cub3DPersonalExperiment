@@ -56,31 +56,26 @@ int	main(void)
 	ok &= expect_ok("EA trailing spaces", process_texture_line(&info, J_ELEM_EA,
 				"EA ./east.xpm   "));
 	ok &= expect_str("EA stored path", info.east_texture, "./east.xpm");
-	// irregular:duplication
 	ok &= expect_ko("NO duplicate", process_texture_line(&info, J_ELEM_NO,
 				"NO ./north2.xpm"));
-	// irregular:path failure
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("NO missing path", process_texture_line(&tmp, J_ELEM_NO,
 					"NO "));
 		map_info_destroy(&tmp);
 	}
-	// irregular:extra token
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("SO extra token", process_texture_line(&tmp, J_ELEM_SO,
 					"SO ./a.xpm extra"));
 		map_info_destroy(&tmp);
 	}
-	// irregular: no space after id
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("WE no separator", process_texture_line(&tmp, J_ELEM_WE,
 					"WE./a.xpm"));
 		map_info_destroy(&tmp);
 	}
-	// irregular: start with space (not ID!)
 	{
 		map_info_init(&tmp);
 		ok &= expect_ko("leading spaces (robustness)",
