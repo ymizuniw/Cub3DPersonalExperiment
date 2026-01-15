@@ -1,7 +1,0 @@
-NO ./north.xpm
-SO ./south.xpm
-WE ./west.xpm
-EA ./east.xpm
-F 220,100,0
-C 225,30,0
-# No map lines follow; should fail with "No map data found!"

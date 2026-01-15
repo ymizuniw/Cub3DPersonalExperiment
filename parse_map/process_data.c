@@ -1,4 +1,4 @@
-#include "map_info.h"
+#include "includes/map_info.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +14,7 @@ static const char	*skip_spaces(const char *s)
 		s++;
 	return (s);
 }
+
 static char	*dup_range(const char *start, const char *end)
 {
 	size_t	len;
