@@ -1,8 +1,5 @@
-// #include "includes/map_info.h"
 #include <string.h>
 #include <stdlib.h>
-
-//this won't own map[].
 char *map_normalize_rectangle(char *map[], int row_max, int col_max)
 {
     size_t i = 0;

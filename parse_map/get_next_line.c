@@ -5,8 +5,6 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE 6
-
-// secure data structure
 typedef struct s_data	t_data;
 typedef int				(*t_init_fn)(t_data *self, int fd, char **stash);
 typedef void			(*t_destroy_fn)(t_data *self);
@@ -16,15 +14,9 @@ typedef struct s_data
 {
 	int					fd;
 	char				**stash;
-
-	// read buf, return val.
 	char				buf[BUFFER_SIZE + 1];
 	ssize_t				br;
-
-	// return val
 	char				*line;
-
-	// functions
 	t_init_fn			init;
 	t_destroy_fn		destroy;
 	t_release_line_fn	release_line;
@@ -48,7 +40,6 @@ static int	data_init(t_data *self, int fd, char **stash)
 {
 	if (!self || !stash || fd < 0)
 		return (-1);
-	// data initialization
 	self->fd = fd;
 	self->line = NULL;
 	self->stash = stash;
@@ -129,8 +120,6 @@ char	*get_next_line(int fd)
 	t_data		d;
 	char		*out;
 	int			pop_line;
-
-	// different fd comes, reset data.
 	if (last_fd != -1 && last_fd != fd)
 	{
 		free(stash);
@@ -185,7 +174,6 @@ char	*get_next_line(int fd)
 			break ;
 		}
 	}
-	// EOF
 	if (!out && stash && *stash)
 	{
 		if (append_mem(&d.line, stash, strlen(stash)) < 0)
@@ -205,25 +193,3 @@ char	*get_next_line(int fd)
 	d.destroy(&d);
 	return (out);
 }
-
-// int	main(void)
-// {
-// 	char		*line;
-// 	int			fd;
-// 	char const	*file;
-
-// 	file = "test.txt";
-// 	fd = open(file, O_RDONLY);
-// 	while (1)
-// 	{
-// 		line = get_next_line(fd);
-// 		// printf("get_next_line() called\n");
-// 		// printf("line: %s\n", line);
-// 		if (line == NULL)
-// 			return (0);
-// 		printf("line: %s\n", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return (0);
-// }

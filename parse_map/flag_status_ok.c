@@ -1,7 +1,7 @@
 #include <stdbool.h>
-#include <stdio.h>
 #include <unistd.h>
 #include "includes/map_info.h"
+#include "includes/parser.h"
 
 int	flag_status_ok(const t_map_info *m)
 {
@@ -10,7 +10,7 @@ int	flag_status_ok(const t_map_info *m)
 
 	if (m == NULL)
 	{
-		printf("map_info is null\n");
+		ft_putstr_fd("map_info is null\n", 2);
 		return (0);
 	}
 	i = 0;
@@ -36,21 +36,21 @@ int	flag_status_ok(const t_map_info *m)
 	if (!m->flag_status.flag_status[MAP])
 		err_items[MAP] = 1;
 	if (err_items[NORTH])
-		printf("NORTH: texture is not set.\n");
+		ft_putstr_fd("NORTH: texture is not set.\n", 2);
 	if (err_items[SOUTH])
-		printf("SOUTH: texture is not set\n");
+		ft_putstr_fd("SOUTH: texture is not set\n", 2);
 	if (err_items[WEST])
-		printf("WEST: texture is not set\n");
+		ft_putstr_fd("WEST: texture is not set\n", 2);
 	if (err_items[EAST])
-		printf("EAST: texture is not set\n");
+		ft_putstr_fd("EAST: texture is not set\n", 2);
 	if (err_items[FLOOR])
-		printf("FLOOR: color is not set\n");
+		ft_putstr_fd("FLOOR: color is not set\n", 2);
 	if (err_items[CEILING])
-		printf("CEILING: color is not set\n");
+		ft_putstr_fd("CEILING: color is not set\n", 2);
 	if (err_items[START])
-		printf("START: start position/direction is not set\n");
+		ft_putstr_fd("START: start position/direction is not set\n", 2);
 	if (err_items[MAP])
-		printf("MAP: map is not set\n");
+		ft_putstr_fd("MAP: map is not set\n", 2);
 	i = 0;
 	while (i < COUNT)
 	{

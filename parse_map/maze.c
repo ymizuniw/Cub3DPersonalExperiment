@@ -2,13 +2,6 @@
 #include <string.h>
 #include <unistd.h>
 
-// 1. visit (i,j) and mark it
-// 2. right, down, left, up, if eavailable,
-// proceed and recursive movement occurs.
-// 3. if exit found, then report it and stop traversal
-
-// chage condition: col_max || row_max || space(==32)
-
 int	count = 0;
 
 int	map[] = {1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -18,12 +11,6 @@ int	map[] = {1, 1, 1, 1, 1, 1, 1, 1, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 1, 
             1,0, 0, 0, 0, 0, 0, 0, 1,
              1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-// 8*i + j
-// right: 8*i + ++j
-// left: 8*i + --j
-// down: 8*(++i) + j
-// up: 8*(--i) + j
 
 int	visit(int map[], int row_max, int col_max, int row, int col)
 {

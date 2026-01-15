@@ -1,7 +1,6 @@
-// #include "includes/map_builder.h"
 #include "includes/map_info.h"
+#include "includes/parser.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 int is_direction(char c)
 {
@@ -31,7 +30,7 @@ int map_scan_set_start(char *map, int row_max, int col_max, int start[2], char *
                     start_flag = true;
                 }
                 else {
-                    fprintf(stderr, "map_scan_set_start: multiple start point err\n");
+                    ft_putstr_fd("map_scan_set_start: multiple start point err\n", 2);
                     start[0]=-1;
                     start[1]=-1;
                     *direction = '?';
@@ -44,6 +43,6 @@ int map_scan_set_start(char *map, int row_max, int col_max, int start[2], char *
     }
     if (start_flag)
         return (1);
-    fprintf(stderr, "map_scan_set_start: no start point found\n");
+    ft_putstr_fd("map_scan_set_start: no start point found\n", 2);
     return (-1);
 }

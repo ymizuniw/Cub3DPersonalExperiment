@@ -1,4 +1,3 @@
-// #include "includes/map_info.h"
 #include <stdio.h>
 
 int	visit(char *map, int row_max, int col_max, int row, int col)
@@ -34,7 +33,5 @@ int	visit(char *map, int row_max, int col_max, int row, int col)
 int map_validate_closed(char *map, int row_max, int col_max, int row, int col)
 {
     int result = visit(map, row_max, col_max, row, col);
-    // visit returns: -1 = closed (success), 0 = open (failure)
-    // Convert to: 1 = closed (success), -1 = open (failure)
     return (result == -1) ? 1 : -1;
 }

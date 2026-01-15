@@ -23,7 +23,6 @@ t_judge_type	judge_line(const char *line, t_parse_phase phase)
 		return (J_EMPTY);
 	if (phase == PHASE_ELEM)
 	{
-		// from Spec8-1, each line must begin with identifier.
 		if (strncmp(line, "NO", 2) == 0)
 			return (J_ELEM_NO);
 		if (strncmp(line, "SO", 2) == 0)

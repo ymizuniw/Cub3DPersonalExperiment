@@ -1,5 +1,5 @@
-#include "includes/map_info.h"
-#include "includes/parser.h"
+#include "map_info.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,8 +14,6 @@ static const char	*skip_spaces(const char *s)
 		s++;
 	return (s);
 }
-
-// duplicate [start, end)
 static char	*dup_range(const char *start, const char *end)
 {
 	size_t	len;
@@ -59,34 +57,34 @@ static int	set_texture_field(char **texture_holder, bool *flag,
 
 	if (!texture_holder || !flag || !line_after_id)
 	{
-		ft_putstr_fd("set_texture_field: data null\n", 2);
+		fprintf(stderr, "set_texture_field: data null\n");
 		return (-1);
 	}
 	if (*flag)
 	{
-		ft_putstr_fd("set_texture_field: duplicate element\n", 2);
+		fprintf(stderr, "set_texture_field: duplicate element\n");
 		return (-1);
 	}
 	if (*line_after_id != ' ' && *line_after_id != '\t')
 	{
-		ft_putstr_fd("no separator between id and texture path\n", 2);
+		fprintf(stderr, "no separator between id and texture path\n");
 		return (-1);
 	}
 	if (take_token(line_after_id, &token_start, &token_end) < 0)
 	{
-		ft_putstr_fd("set_texture_field: file path coudn't got\n", 2);
+		fprintf(stderr, "set_texture_field: file path coudn't got\n");
 		return (-1);
 	}
 	path = dup_range(token_start, token_end);
 	if (!path)
 	{
-		ft_putstr_fd("set_texture_field: dup_range() failed\n", 2);
+		fprintf(stderr, "set_texture_field: dup_range() failed\n");
 		return (-1);
 	}
 	line_leftover = skip_spaces(token_end);
 	if (*line_leftover != '\0')
 	{
-		ft_putstr_fd("set_texture_field: invalid format\n", 2);
+		fprintf(stderr, "set_texture_field: invalid format\n");
 		free(path);
 		return (-1);
 	}
@@ -99,7 +97,7 @@ int	process_texture_line(t_map_info *info, t_judge_type type, const char *line)
 {
 	if (!info || !line)
 	{
-		ft_putstr_fd("process_texture_line: argment null\n", 2);
+		fprintf(stderr, "process_texture_line: argment null\n");
 		return (-1);
 	}
 	if (type == J_ELEM_NO)
@@ -123,8 +121,6 @@ static int	ft_isdigit(char c)
 		return (1);
 	return (0);
 }
-
-// 0<=value<=256;return (1, else return (-1));
 static int	parse_rgb_element(const char **str, int *value)
 {
 	int			tmp;

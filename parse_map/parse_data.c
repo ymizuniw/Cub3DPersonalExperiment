@@ -7,28 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//read_data()
-//judge_data()
-//process_data()
-//process_map()
-
-// typedef enum e_judge_type
-// {
-// 	J_EMPTY,    // 空行 ""
-// 	J_ELEM_NO,  // NO ./path
-// 	J_ELEM_SO,  // SO ./path
-// 	J_ELEM_WE,  // WE ./path
-// 	J_ELEM_EA,  // EA ./path
-// 	J_ELEM_F,   // F r,g,b
-// 	J_ELEM_C,   // C r,g,b
-// 	J_MAP_LINE, // マップ行
-// 	J_INVALID   // 不正
-// }				t_judge_type;
-
-// 1. read each line and judge type correctly.->OK!
-// 2. renew flags corresponding to judged type.
-// 3. parse each line and detect error or set value.
-// 4. parse map content when other elements are fully set.
+ 
 
 void free_map(char **map)
 {
@@ -86,93 +65,73 @@ int parse_data(int fd, t_map_info *map_info)
             if (judge_type==J_EMPTY)
             {
                 printf("type: J_EMPTY\nline: %s\n", out_line);
-                //handle_empty
-                //go to next line
             }
             else if (judge_type == J_ELEM_NO)
             {
                 printf("type: J_ELEM_NO\nline: %s\n", out_line);
-                //parse north
                 int process_texture_ret = process_texture_line(map_info, judge_type, out_line);
                 if (process_texture_ret<0)
                 {
-                    //error: process texture
                     printf("process texture failed!\n");
-                    //interrupt parsing
                     free(out_line);
                     return (-1);  
                 }
-                //set flag after successful processing
                 map_info->flag_status.flag_status[NORTH] = true;
             }
             else if (judge_type == J_ELEM_SO)
             {
                 printf("type: J_ELEM_SO\nline: %s\n", out_line);
-                //parse south
                 int process_texture_ret = process_texture_line(map_info, judge_type, out_line);
                 if (process_texture_ret<0)
                 {
-                    //error: process texture
-                    printf("process texture failed!\n");
-                    //interrupt parsing
+                    ft_putstr_fd("process texture failed!\n", 2);
                     free(out_line);
                     return (-1);  
                 }
-                //set flag after successful processing
                 map_info->flag_status.flag_status[SOUTH] = true;
             }
             else if (judge_type == J_ELEM_WE)
             {
                 printf("type: J_ELEM_WE\nline: %s\n", out_line);
-                //parse west
                 int process_texture_ret = process_texture_line(map_info, judge_type, out_line);
                 if (process_texture_ret<0)
                 {
-                    //error: process texture
-                    printf("process texture failed!\n");
-                    //interrupt parsing
+                    ft_putstr_fd("process texture failed!\n", 2);
                     free(out_line);
                     return (-1);  
                 } 
-                //set flag after successful processing
                 map_info->flag_status.flag_status[WEST] = true;
             }
             else if (judge_type == J_ELEM_EA)
             {
                 printf("type: J_ELEM_EA\nline: %s\n", out_line);
-                //parse east
                 int process_texture_ret = process_texture_line(map_info, judge_type, out_line);
                 if (process_texture_ret<0)
                 {
-                    //error: process texture
-                    printf("process texture failed!\n");
-                    //interrupt parsing
+                    ft_putstr_fd("process texture failed!\n", 2);
                     free(out_line);
                     return (-1);  
                 }
-                //set flag after successful processing
                 map_info->flag_status.flag_status[EAST] = true;
             }
             else if (judge_type == J_ELEM_F)
             {
                 printf("type: J_ELEM_F\nline: %s\n", out_line);
-                //parse Floor
                 int process_color_ret = process_color_line(map_info, judge_type, out_line);
                 if (process_color_ret<0)
                 {
-                    printf("process color failed!\n");
+                    ft_putstr_fd("process color failed!\n", 2);
                     free(out_line);
-                    return (-1);
+                    return (-1);  
                 }
             }
             else if (judge_type == J_ELEM_C)
             {
                 printf("type: J_ELEM_C\nline: %s\n", out_line);
-                //parse Ceiling
                 int process_color_ret = process_color_line(map_info, judge_type, out_line);
                 if (process_color_ret<0)
                 {
-                    printf("process color failed!\n");
+                    ft_putstr_fd("process color failed!\n", 2);
                     free(out_line);
                     return (-1);
                 }
@@ -181,27 +140,21 @@ int parse_data(int fd, t_map_info *map_info)
                 printf("type: J_INVALID\nline: %s\n", out_line);
                 free(out_line);
                 return (-1);
-                //invalid!
             }
             if (except_map_flags_ok(map_info->flag_status.flag_status))
             {
                 parse_phase = PHASE_MAP;
-                // Don't initialize map_builder here, wait for first map line
             }
         }
         else {
             if (judge_type==J_MAP_LINE)
             {
                 printf("type: J_MAP_LINE\nline: %s\n", out_line);
-                
-                // Initialize map_builder on first map line
                 if (!mb_initialized)
                 {
                     map_builder_init(&mb);
                     mb_initialized = 1;
                 }
-                
-                //parse map
                 int add_line_ret = map_builder_add_line(&mb, out_line);
                 if (add_line_ret<0)
                 {
@@ -210,56 +163,45 @@ int parse_data(int fd, t_map_info *map_info)
                         map_builder_destroy(&mb);
                     return (-1);
                 }
-                //set flag
-                //parse map
             }
             else if (judge_type==J_EMPTY)
             {
-                printf("type: J_EMPTY in MAP phase\nline: %s\n", out_line);
-                // Empty lines in map phase are allowed, just skip
+                printf("type: J_EMPTY\nline: %s\n", out_line);
             }
             else {
-                printf("type: Invalid\nline: %s\n", out_line);//regardless of types.
+                printf("type: J_INVALID\nline: %s\n", out_line);
                 free(out_line);
                 if (mb_initialized)
                     map_builder_destroy(&mb);
                 return (-1);
-                //invalid!
             }
         }
         free(out_line);
     }
     if (!mb_initialized)
     {
-        printf("No map data found!\n");
+        ft_putstr_fd("No map data found!\n", 2);
         return (-1);
     }
     
-    // Save map dimensions before calling map_builder_return_map (which resets them)
     size_t saved_row_size = mb.row_size;
     size_t saved_col_size = mb.col_size;
     
-    // if(out_line)
-        // free(out_line);
     char **map = map_builder_return_map(&mb);
     if (map==NULL)
     {
-        printf("map_builder_return_map failed!\n");
+        ft_putstr_fd("map_builder_return_map failed!\n", 2);
         return (-1);
     }
     
     char *rect_map = map_normalize_rectangle(map, saved_row_size, saved_col_size);
     if (rect_map==NULL)
     {
-        printf("map_normalize_rectangle failed!\n");
+        ft_putstr_fd("map_normalize_rectangle failed!\n", 2);
         free_map(map);
         return (-1);
     }
-    
-    // Free the 2D map as we now use the normalized 1D map
     free_map(map);
-    
-    // Store the normalized 1D map in map_info
     map_info->map = rect_map;
     map_info->map_rows = (int)saved_row_size;
     map_info->map_cols = (int)saved_col_size;
@@ -271,20 +213,17 @@ int parse_data(int fd, t_map_info *map_info)
     int scan_set_start_ret = map_scan_set_start(rect_map, saved_row_size, saved_col_size, start_point, &direction);
     if (scan_set_start_ret<0)
     {
-        printf("scan_set_start failed!\n");
+        ft_putstr_fd("scan_set_start failed!\n", 2);
         free(rect_map);
         return (-1);
     }
     map_info->flag_status.flag_status[START] = true;
-    
-    // Replace starting position with '0' for validation
     rect_map[start_point[0] * saved_col_size + start_point[1]] = '0';
-    
     int validate_closed_ret;
     validate_closed_ret = map_validate_closed(rect_map, saved_row_size, saved_col_size, start_point[0], start_point[1]);
     if (validate_closed_ret != 1)
     {
-        printf("map has fault!\n");
+        ft_putstr_fd("map has fault!\n", 2);
         free(rect_map);
         return (-1);
     }

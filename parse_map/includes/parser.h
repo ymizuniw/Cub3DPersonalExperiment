@@ -12,5 +12,6 @@
 
 int	flag_status_ok(const t_map_info *m);
 int parse_data(int fd, t_map_info *map_info);
+void	ft_putstr_fd(char *str, int fd);
 
 #endif

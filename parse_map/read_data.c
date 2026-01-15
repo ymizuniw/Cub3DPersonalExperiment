@@ -1,4 +1,3 @@
-// #include "includes/map_info.h"
 #include "includes/read_data.h"
 #include <fcntl.h>
 #include <stdbool.h>
@@ -7,9 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-// the ownership of line is on caller side.
-// call get_next_line()
 
 int	read_line_init(t_read_line *rl, int fd)
 {
