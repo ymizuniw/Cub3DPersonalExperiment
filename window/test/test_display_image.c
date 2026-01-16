@@ -17,7 +17,6 @@ int main(void)
         return (1);
     img = mlx_xpm_file_to_image(mlx, relative_path, &img_width, &img_height);
     mlx_put_image_to_window(mlx, win, img, 0, 0);
-
     mlx_loop(mlx);
     return (0);
 }

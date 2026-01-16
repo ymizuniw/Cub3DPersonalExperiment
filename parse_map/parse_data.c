@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
- 
-
 void free_map(char **map)
 {
     size_t i = 0;
