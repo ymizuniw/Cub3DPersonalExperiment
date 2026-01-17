@@ -28,4 +28,7 @@ void fill_rect(t_img *img, int x0, int y0, int w, int h, int color);
 int is_wall(const t_map_info *map_info, int x, int y);
 void minimap_render(t_game *game);
 
+//player move in minimap
+int on_wsad(int keycode, t_game *game);
+
 #endif

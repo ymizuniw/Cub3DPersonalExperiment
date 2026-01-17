@@ -3,14 +3,8 @@
 
 void minimap_render(t_game *game)
 {
-    //game->mm:
-    int tile = 16;
-    int ox = 20;
-    int oy = 20;
-
     int bg = 0x000000;
     int wall = 0xFFFFFF;
-    //game->player:
     int player = 0xFF0000;
     int x;
     int y;
@@ -23,16 +17,16 @@ void minimap_render(t_game *game)
         while(x<game->map.map_cols)
         {
             if (is_wall(&game->map, x, y))
-                fill_rect(&game->frame, ox + x * tile, oy + y *tile, tile, tile, wall);
+                fill_rect(&game->frame, game->mm.ox + x * game->mm.tile_px, game->mm.oy + y *game->mm.tile_px, game->mm.tile_px, game->mm.tile_px, wall);
             x++;
         }
         y++;
     }
     {
-        float px = (float)game->map.start_x + 0.5f;
-        float py = (float)game->map.start_y + 0.5f;
-        int sx = ox + (int)(px * tile);
-        int sy = oy + (int)(py * tile);
+        float px = game->player.x;
+        float py = game->player.y;
+        int sx = game->mm.ox + (int)(px * game->mm.tile_px);
+        int sy = game->mm.oy + (int)(py * game->mm.tile_px);
         int dot = 5;
         fill_rect(&game->frame, sx - dot/2, sy - dot/2, dot, dot, player);
     }

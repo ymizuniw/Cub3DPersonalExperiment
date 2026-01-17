@@ -36,7 +36,20 @@ int game_init(t_game *game, t_map_info *map_info, int win_w, int win_h)
 {
     memset(game, 0, sizeof(*game));
     game->map = *map_info;
-    memset(map_info, 0, sizeof(t_map_info));
+    game->player.x = map_info->start_x + 0.5f;
+    game->player.y = map_info->start_y + 0.5f;
+    game->player.dir_x = 0.0f;
+    game->player.dir_y = -1.0f;
+    game->mm.ox = 20;
+    game->mm.oy = 20;
+    game->mm.tile_px = 16;
+    //map_info pointer throw away
+    map_info->map = NULL;
+    map_info->north_texture = NULL;
+    map_info->south_texture = NULL;
+    map_info->west_texture = NULL;
+    map_info->east_texture = NULL;
+
     if (game_mlx_init(game) < 0) return (-1);
     if (game_mlx_new_window(game, win_w, win_h) < 0) return (-1);
     if (game_mlx_new_image(game, win_w, win_h) < 0) return (-1);
