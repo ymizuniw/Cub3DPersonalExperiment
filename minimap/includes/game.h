@@ -21,5 +21,11 @@ int game_mlx_new_window(t_game *game, int win_w, int win_h);
 int game_mlx_new_image(t_game *game, int win_w, int win_h);
 int game_init(t_game *game, t_map_info *map_info, int win_w, int win_h);
 int game_destroy(t_game *game);
+int on_close(void *param);
+
+//minimap
+void fill_rect(t_img *img, int x0, int y0, int w, int h, int color);
+int is_wall(const t_map_info *map_info, int x, int y);
+void minimap_render(t_game *game);
 
 #endif

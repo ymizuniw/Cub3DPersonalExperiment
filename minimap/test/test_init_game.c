@@ -22,17 +22,6 @@
 //     t_minimap mm;
 // }t_game;
 
-int game_init(t_game *game, t_map_info *map_info, int win_w, int win_h)
-{
-    memset(game, 0, sizeof(*game));
-    game->map = *map_info;
-
-    if (game_mlx_init(game) < 0) return (-1);
-    if (game_mlx_new_window(game, win_w, win_h) < 0) return (-1);
-    if (game_mlx_new_image(game, win_w, win_h) < 0) return (-1);
-    return (1);
-}
-
 int main(void)
 {
     int fd = open("../../parse_map/test/data/valid_simple.cub", O_RDONLY);
@@ -46,12 +35,15 @@ int main(void)
     close(fd);
 
     t_game game;
-    int game_init_ret = game_init(&game, 900, 900);
+    //the ownership of map is delegated to t_game
+    int game_init_ret = game_init( &game, &map_info,900, 900);
     if (game_init_ret<0)
     {
-        map_info_destroy(&map_info);
+        //if window or mlx is NULL, it refers to undefined memory?
+        game_destroy(&game);
         return(1);
     }
+    mlx_hook(game.win, 17, 0, on_close, &game);
     mlx_loop(game.mlx);
     return (0);
 }

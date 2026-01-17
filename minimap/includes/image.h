@@ -12,4 +12,7 @@ typedef struct s_img
     int h;
 } t_img;
 
+void ft_put_pixel(t_img *img, int x, int y, int color);
+void clear_img(t_img *img, int color);
+
 #endif

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cc test_init_game.c ../game_fn.c \
+cc test_build_minimap_render.c ../clear_img.c ../fill_rect.c ../ft_put_pixel.c ../game_fn.c ../is_wall.c ../minimap_render.c\
   -I../includes \
   -I../../parse_map/includes \
   -I../../minilibx_opengl_20191021 \

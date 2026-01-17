@@ -69,7 +69,6 @@ void draw_rect(t_data *img,
     draw_vertical_line(img, x1, y0, y1, color);   // 右
 }
 
-
 int main(void)
 {
     void *mlx;

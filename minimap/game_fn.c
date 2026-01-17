@@ -1,6 +1,7 @@
 #include "includes/game.h"
 #include "../minilibx_opengl_20191021/mlx.h"
 #include "string.h"
+#include <stdlib.h>
 
 int game_mlx_init(t_game *game)
 {
@@ -35,7 +36,7 @@ int game_init(t_game *game, t_map_info *map_info, int win_w, int win_h)
 {
     memset(game, 0, sizeof(*game));
     game->map = *map_info;
-
+    memset(map_info, 0, sizeof(t_map_info));
     if (game_mlx_init(game) < 0) return (-1);
     if (game_mlx_new_window(game, win_w, win_h) < 0) return (-1);
     if (game_mlx_new_image(game, win_w, win_h) < 0) return (-1);
@@ -46,5 +47,14 @@ int game_destroy(t_game *game)
 {
     mlx_destroy_image(game->mlx, game->frame.img);
     mlx_destroy_window(game->mlx, game->win);
+    map_info_destroy(&game->map);
     return (1);
+}
+
+int on_close(void *param)
+{
+    t_game *game = (t_game *)param;
+    game_destroy(game);
+    exit(0);
+    return (0);
 }
