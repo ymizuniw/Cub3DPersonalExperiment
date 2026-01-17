@@ -9,4 +9,6 @@ typedef struct s_player
     float dir_y;
 } t_player;
 
+void player_set_dir(t_player *player, char c);
+
 #endif

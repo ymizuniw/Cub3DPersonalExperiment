@@ -3,7 +3,7 @@
 
 typedef struct s_minimap
 {
-    int tile_px;
+    int tile_size;
     int ox;
     int oy;
 }t_minimap;

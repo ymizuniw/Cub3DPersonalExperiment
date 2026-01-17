@@ -15,7 +15,7 @@ int main(void)
     t_map_info map_info;
     t_game game;
 
-    fd = open("../../parse_map/test/data/valid_simple.cub", O_RDONLY);
+    fd = open("../../parse_map/test/data/valid_jagged_map.cub", O_RDONLY);
     if (fd<0)
     {
         perror("open");

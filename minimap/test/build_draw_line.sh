@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cc test_player_move.c ../player_move.c ../player_set_dir.c ../clear_img.c ../fill_rect.c ../ft_put_pixel.c ../game_fn.c ../is_wall.c ../minimap_render.c\
+cc test_draw_line.c ../draw_line.c ../player_move.c ../player_set_dir.c ../clear_img.c ../fill_rect.c ../ft_put_pixel.c ../game_fn.c ../is_wall.c ../minimap_render.c\
   -I../includes \
   -I../../parse_map/includes \
   -I../../minilibx_opengl_20191021 \

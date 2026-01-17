@@ -1,5 +1,6 @@
 #include "includes/game.h"
 #include "../minilibx_opengl_20191021/mlx.h"
+#include "includes/minimap.h"
 #include "string.h"
 #include <stdlib.h>
 
@@ -32,17 +33,27 @@ int game_mlx_new_image(t_game *game, int win_w, int win_h)
     return (1);
 }
 
+void game_minimap_init(t_game *game)
+{
+    game->mm.ox = 20;
+    game->mm.oy = 20;
+    game->mm.tile_size = 16;
+}
+
+void game_player_init(t_game *game)
+{
+    game->player.x = game->map.start_x + 0.5f;
+    game->player.y = game->map.start_y + 0.5f;
+    player_set_dir(&game->player, game->map.start_direction);
+}
+
 int game_init(t_game *game, t_map_info *map_info, int win_w, int win_h)
 {
     memset(game, 0, sizeof(*game));
     game->map = *map_info;
-    game->player.x = map_info->start_x + 0.5f;
-    game->player.y = map_info->start_y + 0.5f;
-    game->player.dir_x = 0.0f;
-    game->player.dir_y = -1.0f;
-    game->mm.ox = 20;
-    game->mm.oy = 20;
-    game->mm.tile_px = 16;
+    
+    game_player_init(game);
+    game_minimap_init(game);
     //map_info pointer throw away
     map_info->map = NULL;
     map_info->north_texture = NULL;

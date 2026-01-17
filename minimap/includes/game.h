@@ -31,4 +31,7 @@ void minimap_render(t_game *game);
 //player move in minimap
 int on_wsad(int keycode, t_game *game);
 
+//draw_line
+void draw_line(t_img *img, int x0, int y0, int x1, int y1, int color);
+
 #endif

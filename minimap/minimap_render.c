@@ -17,7 +17,7 @@ void minimap_render(t_game *game)
         while(x<game->map.map_cols)
         {
             if (is_wall(&game->map, x, y))
-                fill_rect(&game->frame, game->mm.ox + x * game->mm.tile_px, game->mm.oy + y *game->mm.tile_px, game->mm.tile_px, game->mm.tile_px, wall);
+                fill_rect(&game->frame, game->mm.ox + x * game->mm.tile_size, game->mm.oy + y *game->mm.tile_size, game->mm.tile_size, game->mm.tile_size, wall);
             x++;
         }
         y++;
@@ -25,8 +25,8 @@ void minimap_render(t_game *game)
     {
         float px = game->player.x;
         float py = game->player.y;
-        int sx = game->mm.ox + (int)(px * game->mm.tile_px);
-        int sy = game->mm.oy + (int)(py * game->mm.tile_px);
+        int sx = game->mm.ox + (int)(px * game->mm.tile_size);
+        int sy = game->mm.oy + (int)(py * game->mm.tile_size);
         int dot = 5;
         fill_rect(&game->frame, sx - dot/2, sy - dot/2, dot, dot, player);
     }
