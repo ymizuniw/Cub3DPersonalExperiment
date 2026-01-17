@@ -1,4 +1,3 @@
-#include "../minilibx_opengl_20191021/mlx.h"
 #include "includes/image.h"
 
 void ft_put_pixel(t_img *img, int x, int y, int color)

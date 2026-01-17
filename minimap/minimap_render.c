@@ -30,5 +30,6 @@ void minimap_render(t_game *game)
         int dot = 5;
         fill_rect(&game->frame, sx - dot/2, sy - dot/2, dot, dot, player);
     }
+    draw_player_dir(game);
     mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0,0);
 }
