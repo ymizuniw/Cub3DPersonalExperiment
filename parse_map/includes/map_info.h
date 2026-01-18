@@ -34,8 +34,8 @@ typedef struct s_map_info
 	char			*south_texture;
 	char			*west_texture;
 	char			*east_texture;
-	int				floor_color[3];
-	int				ceiling_color[3];
+	int				floor_color[3];//RGB
+	int				ceiling_color[3];//RGB
 	t_flag_status	flag_status;
 }					t_map_info;
 

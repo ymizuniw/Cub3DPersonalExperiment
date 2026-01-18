@@ -23,8 +23,8 @@ void minimap_render(t_game *game)
         y++;
     }
     {
-        float px = game->player.x;
-        float py = game->player.y;
+        float px = game->player.pos.x;
+        float py = game->player.pos.y;
         int sx = game->mm.ox + (int)(px * game->mm.tile_size);
         int sy = game->mm.oy + (int)(py * game->mm.tile_size);
         int dot = 5;

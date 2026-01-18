@@ -1,6 +1,5 @@
 #include "../includes/game.h"
 #include "../../minilibx_opengl_20191021/mlx.h"
-#include "../../parse_map/includes/parser.h"
 #include "../../parse_map/includes/map_info.h"
 #include <fcntl.h>
 #include <unistd.h>

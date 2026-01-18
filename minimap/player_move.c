@@ -3,8 +3,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define ROT_SPEED 1.0f
-
 int on_wsad(int keycode, t_game *game)
 {
     float step = 0.10f;
@@ -21,12 +19,12 @@ int on_wsad(int keycode, t_game *game)
         dx = 1.0f;
     if (dx!=0.0f || dy != 0.0f)
     {
-        float new_x = game->player.x + dx * step;
-        float new_y = game->player.y + dy * step;
+        float new_x = game->player.pos.x + dx * step;
+        float new_y = game->player.pos.y + dy * step;
         if (!is_wall(&game->map, new_x, new_y))
         {
-            game->player.x = new_x;
-            game->player.y = new_y;
+            game->player.pos.x = new_x;
+            game->player.pos.y = new_y;
         }
         minimap_render(game);
     }
@@ -36,9 +34,9 @@ int on_wsad(int keycode, t_game *game)
 int on_right_left(int keycode, t_game *game)
 {
     if (keycode==123)
-        rotate_player(&game->player, -ROT_SPEED);
+        rotate_player(&game->player, -M_PI/45);
     else if (keycode==124)
-        rotate_player(&game->player, +ROT_SPEED);
+        rotate_player(&game->player, +M_PI/45);
     minimap_render(game);
     return (0);
 }

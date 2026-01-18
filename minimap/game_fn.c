@@ -42,8 +42,8 @@ void game_minimap_init(t_game *game)
 
 void game_player_init(t_game *game)
 {
-    game->player.x = game->map.start_x + 0.5f;
-    game->player.y = game->map.start_y + 0.5f;
+    game->player.pos.x = game->map.start_x + 0.5f;
+    game->player.pos.y = game->map.start_y + 0.5f;
     player_set_dir(&game->player, game->map.start_direction);
 }
 

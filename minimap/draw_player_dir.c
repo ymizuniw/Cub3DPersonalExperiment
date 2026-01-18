@@ -7,10 +7,10 @@ void draw_player_dir(t_game *game)
     int color = 0x00FFAA00;
 
     //set (x,y) of start/end cell
-    float start_cell_x = game->player.x;
-    float start_cell_y = game->player.y;
-    float end_cell_x = start_cell_x + game->player.dir_x * line_len;
-    float end_cell_y = start_cell_y + game->player.dir_y * line_len;
+    float start_cell_x = game->player.pos.x;
+    float start_cell_y = game->player.pos.y;
+    float end_cell_x = start_cell_x + game->player.dir.x * line_len;
+    float end_cell_y = start_cell_y + game->player.dir.y * line_len;
 
     //mapping to pixel
     int start_pixel_x = game->mm.ox + (int)(start_cell_x * game->mm.tile_size);
