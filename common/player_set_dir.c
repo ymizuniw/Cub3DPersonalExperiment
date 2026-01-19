@@ -24,4 +24,6 @@ void player_set_dir(t_player *player, char c)
         player->dir.x = -1.0f;
         player->dir.y = 0.0f;
     }
+    // Initialize plane based on direction
+    player_init_plane_from_dir(player);
 }

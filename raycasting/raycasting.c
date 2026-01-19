@@ -1,6 +1,9 @@
 #include "../common/includes/game.h"
+#include "../common/includes/graphics.h"
 #include "includes/ray.h"
+#include <float.h>
 #include <limits.h>
+#include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,8 +65,15 @@ void	init_dda(t_dda *dda, const t_player *player, const t_ray *ray)
 {
 	dda->map_x = (int)player->pos.x;
 	dda->map_y = (int)player->pos.y;
-	dda->delta_dist_x = (ray->dir.x == 0) ? ULONG_MAX : fabs(1 / ray->dir.x);
-	dda->delta_dist_y = (ray->dir.y == 0) ? ULONG_MAX : fabs(1 / ray->dir.y);
+	// Safe zero division check with FLT_MAX
+	if (fabs(ray->dir.x) < 1e-9f)
+		dda->delta_dist_x = FLT_MAX;
+	else
+		dda->delta_dist_x = fabs(1.0f / ray->dir.x);
+	if (fabs(ray->dir.y) < 1e-9f)
+		dda->delta_dist_y = FLT_MAX;
+	else
+		dda->delta_dist_y = fabs(1.0f / ray->dir.y);
 	dda->hit = 0;
 }
 
@@ -137,7 +147,7 @@ void	seek_perp_dist(t_dda *dda)
 }
 
 void	decide_ray_dir(t_ray *ray, int const x, int const screen_w,
-		const t_plane *plane, const t_player *player)
+		const t_vec2 *plane, const t_player *player)
 {
 	float	camera_x;
 
@@ -145,8 +155,8 @@ void	decide_ray_dir(t_ray *ray, int const x, int const screen_w,
 	ray->dir.x = player->dir.x;
 	ray->dir.y = player->dir.y;
 	camera_x = 2 * x / (float)screen_w - 1;
-	ray->dir.x = ray->dir.x + plane->pos.x * camera_x;
-	ray->dir.y = ray->dir.y + plane->pos.y * camera_x;
+	ray->dir.x = ray->dir.x + plane->x * camera_x;
+	ray->dir.y = ray->dir.y + plane->y * camera_x;
 }
 
 void	decide_draw_ends(int *draw_start, int *draw_end, int frame_height,
@@ -154,7 +164,13 @@ void	decide_draw_ends(int *draw_start, int *draw_end, int frame_height,
 {
 	int	line_height;
 
-	line_height = frame_height / perp_dist;
+	// Safety check: prevent division by zero/very small values
+	if (perp_dist < 1e-6f)
+		perp_dist = 1e-6f;
+	// Range check: limit maximum line height
+	line_height = (int)(frame_height / perp_dist);
+	if (line_height > frame_height * 10)
+		line_height = frame_height * 10;
 	*draw_start = -line_height / 2 + frame_height / 2;
 	if (*draw_start < 0)
 		*draw_start = 0;
@@ -206,31 +222,55 @@ void	init_draw_ctx(t_draw_ctx *dc)
 	memset(dc, 0, sizeof(t_draw_ctx));
 }
 
-void	draw_to_frame_buffer(t_game *game, t_draw_ctx const *d)
+// Simple solid color wall renderer
+void	draw_to_frame_buffer(t_game *game, t_draw_ctx const *dc)
 {
+	int	color;
+	int	y;
+
+	// Choose color based on wall direction and side
+	if (dc->side == 0) // NS walls
+	{
+		if (dc->texture_id == NORTH)
+			color = 0xFF0000; // Red
+		else
+			color = 0x800000; // Dark red
+	}
+	else // EW walls
+	{
+		if (dc->texture_id == EAST)
+			color = 0x00FF00; // Green
+		else
+			color = 0x008000; // Dark green
+	}
+	// Draw vertical line
+	for (y = dc->draw_start; y <= dc->draw_end; y++)
+	{
+		ft_put_pixel(&game->frame, dc->x, y, color);
+	}
 }
 
 int	raycasting(t_game *game)
 {
 	t_ray		ray;
-	t_plane		plane;
 	t_fps		fps;
 	t_dda		dda;
 	t_draw_ctx	dc;
 
 	init_ray(&ray, &game->player);
-	init_plane(&plane, 0, 0.66f);
 	init_fps(&fps);
 	init_draw_ctx(&dc);
 	// while (!done())
 	// {
 	for (int x = 0; x < game->frame.w; x++)
 	{
-		decide_ray_dir(&ray, x, game->frame.w, &plane, &game->player);
+		dc.x = x; // Set current screen column
+		decide_ray_dir(&ray, x, game->frame.w, &game->player.plane, &game->player);
 		init_dda(&dda, &game->player, &ray);
 		decide_step_dir(&ray, &dda);
 		step_until_hit(&dda, &game->map_info);
 		seek_perp_dist(&dda);
+		dc.side = dda.side; // Set wall side (0=NS, 1=EW)
 		decide_draw_ends(&dc.draw_start, &dc.draw_end, game->frame.h,
 			dda.perp_dist);
 		decide_wall_dir(&dc.texture_id, &dda, &ray);
