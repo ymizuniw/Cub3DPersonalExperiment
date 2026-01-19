@@ -11,7 +11,7 @@ typedef struct s_game
     void *mlx;
     void *win;
     t_img frame;
-    t_map_info map;
+    t_map_info map_info;
     t_player player;
     t_minimap mm;
 }t_game;

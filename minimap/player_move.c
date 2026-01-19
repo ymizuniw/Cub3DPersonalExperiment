@@ -21,7 +21,7 @@ int on_wsad(int keycode, t_game *game)
     {
         float new_x = game->player.pos.x + dx * step;
         float new_y = game->player.pos.y + dy * step;
-        if (!is_wall(&game->map, new_x, new_y))
+        if (!is_wall(&game->map_info, new_x, new_y))
         {
             game->player.pos.x = new_x;
             game->player.pos.y = new_y;

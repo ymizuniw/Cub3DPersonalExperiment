@@ -42,15 +42,15 @@ void game_minimap_init(t_game *game)
 
 void game_player_init(t_game *game)
 {
-    game->player.pos.x = game->map.start_x + 0.5f;
-    game->player.pos.y = game->map.start_y + 0.5f;
-    player_set_dir(&game->player, game->map.start_direction);
+    game->player.pos.x = game->map_info.start_x + 0.5f;
+    game->player.pos.y = game->map_info.start_y + 0.5f;
+    player_set_dir(&game->player, game->map_info.start_direction);
 }
 
 int game_init(t_game *game, t_map_info *map_info, int win_w, int win_h)
 {
     memset(game, 0, sizeof(*game));
-    game->map = *map_info;
+    game->map_info = *map_info;
     
     game_player_init(game);
     game_minimap_init(game);
@@ -71,7 +71,7 @@ int game_destroy(t_game *game)
 {
     mlx_destroy_image(game->mlx, game->frame.img);
     mlx_destroy_window(game->mlx, game->win);
-    map_info_destroy(&game->map);
+    map_info_destroy(&game->map_info);
     return (1);
 }
 

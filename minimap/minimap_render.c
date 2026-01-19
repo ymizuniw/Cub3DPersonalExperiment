@@ -11,12 +11,12 @@ void minimap_render(t_game *game)
 
     clear_img(&game->frame, bg);
     y = 0;
-    while(y<game->map.map_rows)
+    while(y<game->map_info.map_rows)
     {
         x = 0;
-        while(x<game->map.map_cols)
+        while(x<game->map_info.map_cols)
         {
-            if (is_wall(&game->map, x, y))
+            if (is_wall(&game->map_info, x, y))
                 fill_rect(&game->frame, game->mm.ox + x * game->mm.tile_size, game->mm.oy + y *game->mm.tile_size, game->mm.tile_size, game->mm.tile_size, wall);
             x++;
         }
