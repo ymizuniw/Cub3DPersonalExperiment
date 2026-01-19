@@ -34,7 +34,7 @@ typedef struct s_dda
 	int		map_y;
 	int		step_x;
 	int		step_y;
-	char	side;
+	int		side;
 
 	// hit
 	int		hit;
@@ -64,6 +64,7 @@ void	init_dda(t_dda *dda, const t_player *player, const t_ray *ray)
 	dda->map_y = (int)player->pos.y;
 	dda->delta_dist_x = (ray->dir.x == 0) ? ULONG_MAX : fabs(1 / ray->dir.x);
 	dda->delta_dist_y = (ray->dir.y == 0) ? ULONG_MAX : fabs(1 / ray->dir.y);
+	dda->hit = 0;
 }
 
 void	init_fps(t_fps *fps)
@@ -114,7 +115,7 @@ void	step_until_hit(t_dda *dda, t_map_info *map_info)
 		{
 			dda->side_dist_x += dda->delta_dist_x;
 			dda->map_x += dda->step_x;
-			dda->side = 'x';
+			dda->side = 0;
 		}
 		else
 		{
@@ -123,24 +124,27 @@ void	step_until_hit(t_dda *dda, t_map_info *map_info)
 			dda->side = 1;
 		}
 		if (map_info->map[dda->map_y * map_info->map_cols + dda->map_x] == '1')
-			dda->hit = 'y';
+			dda->hit = 1;
 	}
 }
 
 void	seek_perp_dist(t_dda *dda)
 {
-	if (dda->side == 'x')
-		dda->perp_dist = 0;
+	if (dda->side == 0)
+		dda->perp_dist = dda->side_dist_x - dda->delta_dist_x;
 	else
-		dda->perp_dist = 0;
+		dda->perp_dist = dda->side_dist_y - dda->delta_dist_y;
 }
 
-void	decide_ray_dir(t_ray *ray, int const x, int const map_rows,
-		const t_plane *plane)
+void	decide_ray_dir(t_ray *ray, int const x, int const screen_w,
+		const t_plane *plane, const t_player *player)
 {
 	float	camera_x;
 
-	camera_x = 2 * x / (float)map_rows - 1;
+	// Reset to base direction (no accumulation)
+	ray->dir.x = player->dir.x;
+	ray->dir.y = player->dir.y;
+	camera_x = 2 * x / (float)screen_w - 1;
 	ray->dir.x = ray->dir.x + plane->pos.x * camera_x;
 	ray->dir.y = ray->dir.y + plane->pos.y * camera_x;
 }
@@ -161,7 +165,7 @@ void	decide_draw_ends(int *draw_start, int *draw_end, int frame_height,
 
 void	decide_wall_dir(int *wall, t_dda const *dda, t_ray const *ray)
 {
-	if (dda->side == 'x')
+	if (dda->side == 0)
 	{
 		if (ray->dir.x > 0)
 			*wall = EAST;
@@ -193,7 +197,7 @@ typedef struct s_draw_ctx
 	int		draw_end;
 	int		line_height;
 	double wall_x;  // fractional hit position on the wall [0,1)
-	char side;      // 'x' or 'y'
+	int side;       // 0 or 1
 	int texture_id; // NORTH/SOUTH/EAST/WEST
 }			t_draw_ctx;
 
@@ -222,7 +226,7 @@ int	raycasting(t_game *game)
 	// {
 	for (int x = 0; x < game->frame.w; x++)
 	{
-		decide_ray_dir(&ray, x, game->frame.w, &plane);
+		decide_ray_dir(&ray, x, game->frame.w, &plane, &game->player);
 		init_dda(&dda, &game->player, &ray);
 		decide_step_dir(&ray, &dda);
 		step_until_hit(&dda, &game->map_info);
@@ -235,4 +239,5 @@ int	raycasting(t_game *game)
 	}
 	// mlx_put_image_to_window(game->mlx, game->);
 	// }
+	return (0);
 }
