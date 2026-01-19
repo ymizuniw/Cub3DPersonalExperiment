@@ -28,11 +28,6 @@ MLX_DIR = minilibx_opengl_20191021
 # Include directories
 INCLUDES = -I$(INC_DIR)/core -I$(INC_DIR)/input -I$(INC_DIR)/map_parser -I$(VECTOR_DIR) -I$(MLX_DIR)
 
-# Libraries
-VECTOR_LIB = $(VECTOR_DIR)/vector.a
-MLX_LIB = $(MLX_DIR)/libmlx.a
-LIBS = $(VECTOR_LIB) -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
-
 # Source files
 CORE_SRCS = $(SRC_DIR)/core/cub3d.c \
 			$(SRC_DIR)/core/game_lifecycle.c \
@@ -49,7 +44,11 @@ PLAYER_SRCS = $(SRC_DIR)/player/game_player_init.c \
 
 INPUT_SRCS = $(SRC_DIR)/input/on_keypress.c \
 			 $(SRC_DIR)/input/on_wsad.c \
-			 $(SRC_DIR)/input/on_right_left.c
+			 $(SRC_DIR)/input/on_right_left.c \
+			 $(SRC_DIR)/input/minimap_render.c \
+			 $(SRC_DIR)/input/draw_player_dir.c \
+			 $(SRC_DIR)/input/draw_line.c \
+			 $(SRC_DIR)/input/fill_rect.c
 
 GAME_LOGIC_SRCS = $(SRC_DIR)/game_logic/is_wall.c \
 				  $(SRC_DIR)/game_logic/game_minimap_init.c
@@ -69,12 +68,6 @@ MAP_PARSER_SRCS = $(SRC_DIR)/map_parser/parse_data.c \
 				  $(SRC_DIR)/map_parser/ft_putstr_fd.c \
 				  $(SRC_DIR)/map_parser/get_next_line.c
 
-# All source files
-SRCS = $(CORE_SRCS) $(GRAPHICS_SRCS) $(PLAYER_SRCS) $(INPUT_SRCS) $(GAME_LOGIC_SRCS) $(RENDERER_SRCS) $(MAP_PARSER_SRCS)
-
-# Object files
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-
 # Vector library source files
 VECTOR_SRCS = $(VECTOR_DIR)/add_v2.c \
 			  $(VECTOR_DIR)/init_v2.c \
@@ -82,7 +75,12 @@ VECTOR_SRCS = $(VECTOR_DIR)/add_v2.c \
 			  $(VECTOR_DIR)/rotate_v2.c \
 			  $(VECTOR_DIR)/subtract_v2.c
 
-VECTOR_OBJS = $(VECTOR_SRCS:$(VECTOR_DIR)/%.c=$(VECTOR_DIR)/%.o)
+# All source files
+SRCS = $(CORE_SRCS) $(GRAPHICS_SRCS) $(PLAYER_SRCS) $(INPUT_SRCS) $(GAME_LOGIC_SRCS) $(RENDERER_SRCS) $(MAP_PARSER_SRCS)
+
+# Object files
+OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+VECTOR_OBJS = $(VECTOR_SRCS:$(VECTOR_DIR)/%.c=$(OBJ_DIR)/vector/%.o)
 
 # Colors for output
 GREEN = \033[0;32m
@@ -94,18 +92,14 @@ NC = \033[0m # No Color
 all: $(NAME)
 
 # Build the main program
-$(NAME): $(VECTOR_LIB) $(OBJS)
+$(NAME): $(OBJS) $(VECTOR_OBJS)
 	@echo "$(YELLOW)Linking $(NAME)...$(NC)"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(VECTOR_OBJS) -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 	@echo "$(GREEN)✅ Build successful! Run './$(NAME) map_file.cub' to start$(NC)"
 
-# Build vector library
-$(VECTOR_LIB): $(VECTOR_OBJS)
-	@echo "$(YELLOW)Building vector library...$(NC)"
-	@ar rcs $(VECTOR_LIB) $(VECTOR_OBJS)
-
 # Compile vector object files
-$(VECTOR_DIR)/%.o: $(VECTOR_DIR)/%.c
+$(OBJ_DIR)/vector/%.o: $(VECTOR_DIR)/%.c | $(OBJ_DIR)
+	@echo "$(YELLOW)Compiling $<...$(NC)"
 	@$(CC) $(CFLAGS) -I$(VECTOR_DIR) -c $< -o $@
 
 # Create object directories
@@ -118,6 +112,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/game_logic
 	@mkdir -p $(OBJ_DIR)/renderer
 	@mkdir -p $(OBJ_DIR)/map_parser
+	@mkdir -p $(OBJ_DIR)/vector
 
 # Compile object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
@@ -128,13 +123,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 clean:
 	@echo "$(YELLOW)Cleaning object files...$(NC)"
 	@$(RM) -r $(OBJ_DIR)
-	@$(RM) $(VECTOR_OBJS)
 
 # Clean everything
 fclean: clean
-	@echo "$(YELLOW)Cleaning executable and libraries...$(NC)"
+	@echo "$(YELLOW)Cleaning executable...$(NC)"
 	@$(RM) $(NAME)
-	@$(RM) $(VECTOR_LIB)
 
 # Rebuild everything
 re: fclean all

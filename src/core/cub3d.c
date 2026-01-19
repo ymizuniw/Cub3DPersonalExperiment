@@ -1,4 +1,5 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
+#include "../input/minimap_render.h"
 #include "game.h"
 #include "graphics.h"
 #include "input.h"
@@ -19,6 +20,7 @@ int	game_loop(t_game *game)
 {
 	clear_img(&game->frame, 0x000000);
 	raycasting(game);
+	minimap_render(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 	return (0);
 }

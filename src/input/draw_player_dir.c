@@ -1,6 +1,6 @@
-#include "../common/includes/game.h"
-#include "../common/includes/graphics.h"
-#include "../common/includes/player.h"
+#include "../../include/core/game.h"
+#include "../../include/core/graphics.h"
+#include "../../include/core/player.h"
 
 void	draw_player_dir(t_game *game)
 {

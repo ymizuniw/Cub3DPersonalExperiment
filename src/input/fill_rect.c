@@ -1,4 +1,4 @@
-#include "../common/includes/graphics.h"
+#include "../../include/core/graphics.h"
 #include <stdlib.h>
 
 void	fill_rect(t_img *img, int x0, int y0, int w, int h, int color)

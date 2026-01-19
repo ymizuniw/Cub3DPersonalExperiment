@@ -1,11 +1,10 @@
-#include "../common/includes/game.h"
-#include "../common/includes/graphics.h"
+#include "../../include/core/game.h"
+#include "../../include/core/graphics.h"
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "minimap_render.h"
 
 void	minimap_render(t_game *game)
 {
-	int		bg;
 	int		wall;
 	int		player;
 	int		x;
@@ -16,10 +15,8 @@ void	minimap_render(t_game *game)
 	int		sy;
 	int		dot;
 
-	bg = 0x000000;
 	wall = 0xFFFFFF;
 	player = 0xFF0000;
-	clear_img(&game->frame, bg);
 	y = 0;
 	while (y < game->map_info.map_rows)
 	{
@@ -43,5 +40,4 @@ void	minimap_render(t_game *game)
 		fill_rect(&game->frame, sx - dot / 2, sy - dot / 2, dot, dot, player);
 	}
 	draw_player_dir(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }

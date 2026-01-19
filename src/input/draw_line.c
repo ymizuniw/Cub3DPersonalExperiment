@@ -1,5 +1,5 @@
-#include "../common/includes/graphics.h"
-#include "../common/includes/image.h"
+#include "../../include/core/graphics.h"
+#include "../../include/core/image.h"
 
 int	abs_int(int val)
 {
