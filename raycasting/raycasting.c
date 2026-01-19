@@ -9,6 +9,7 @@ typedef struct s_ray
 {
 	t_vec2	pos;
 	t_vec2	dir;
+	float	angle;
 }			t_ray;
 
 typedef struct s_plane
@@ -48,6 +49,7 @@ void	init_ray(t_ray *ray, const t_player *player)
 {
 	ray->pos = init_v2(player->pos.x, player->pos.y);
 	ray->dir = init_v2(player->dir.x, player->dir.y);
+	ray->angle = 0.f;
 }
 
 void	init_plane(t_plane *plane, float const plane_x, float const plane_y)
@@ -149,19 +151,57 @@ int	raycasting(t_game *game)
 	t_plane	plane;
 	t_fps	fps;
 	t_dda	dda;
+	int		line_height;
+	int		draw_start;
+	int		draw_end;
+	float	ray_angle;
+	char	texture;
+	int		wall;
+	double	wall_x;
 
 	init_ray(&ray, &game->player);
 	init_plane(&plane, 0, 0.66f);
 	init_fps(&fps);
-	while (!done())
+	// while (!done())
+	// {
+	for (int x = 0; x < game->frame.w; x++)
 	{
-		for (int x = 0; x < game->map_info.map_rows; x++)
+		decide_ray_dir(&ray, x, game->frame.w, &plane);
+		init_dda(&dda, &game->player, &ray);
+		decide_step_dir(&ray, &dda);
+		step_until_hit(&dda, &game->map_info);
+		seek_perp_dist(&dda);
+		line_height = game->frame.h / dda.perp_dist;
+		draw_start = -line_height / 2 + game->frame.h / 2;
+		if (draw_start < 0)
+			draw_start = 0;
+		draw_end = line_height / 2 + game->frame.h / 2;
+		if (draw_end >= game->frame.h)
+			draw_end = game->frame.h - 1;
+		// ray.angle = atanf(ray.dir.y / ray.dir.x);
+		// the direction is right?
+		if (dda.side == 'x')
 		{
-			decide_ray_dir(&ray, x, game->map_info.map_rows, &plane);
-			init_dda(&dda, &game->player, &ray);
-			decide_step_dir(&ray, &dda);
-			step_until_hit(&dda, &game->map_info);
-			seek_perp_dist(&dda);
+			if (ray.dir.x > 0)
+				wall = EAST;
+			else
+				wall = WEST;
 		}
+		else
+		{
+			if (ray.dir.y > 0)
+				wall = NORTH;
+			else
+				wall = SOUTH;
+		}
+		if (dda.side == 0)
+			wall_x = game->player.pos.y + dda.perp_dist * ray.dir.y;
+		else
+			wall_x = game->player.pos.x + dda.perp_dist * ray.dir.x;
+		/*
+			if (wall == SOUTH || wall == WEST)
+				texture_width - wall_x
+		*/
 	}
+	// }
 }
