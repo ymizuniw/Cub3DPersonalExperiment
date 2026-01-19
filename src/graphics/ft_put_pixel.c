@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "../../include/core/graphics.h"
 
 void ft_put_pixel(t_img *img, int x, int y, int color)
 {

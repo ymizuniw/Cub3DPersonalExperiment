@@ -1,4 +1,4 @@
-#include "player.h"
+#include "../../include/core/player.h"
 #include <stdio.h>
 #include <unistd.h>
 

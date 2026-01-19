@@ -1,4 +1,4 @@
-#include "game.h"
+#include "../../include/core/game.h"
 
 void	game_minimap_init(t_game *game)
 {

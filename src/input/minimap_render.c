@@ -1,7 +1,7 @@
 #include "../../include/core/game.h"
 #include "../../include/core/graphics.h"
 #include "../../minilibx_opengl_20191021/mlx.h"
-#include "minimap_render.h"
+#include "../../include/input/minimap_render.h"
 
 void	minimap_render(t_game *game)
 {

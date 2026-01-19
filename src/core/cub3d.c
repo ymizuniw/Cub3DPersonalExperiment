@@ -1,10 +1,10 @@
+#include "../../include/core/game.h"
+#include "../../include/core/graphics.h"
+#include "../../include/core/input.h"
+#include "../../include/input/minimap_render.h"
+#include "../../include/map_parser/map_info.h"
+#include "../../include/map_parser/parser.h"
 #include "../../minilibx_opengl_20191021/mlx.h"
-#include "../input/minimap_render.h"
-#include "game.h"
-#include "graphics.h"
-#include "input.h"
-#include "map_info.h"
-#include "parser.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>

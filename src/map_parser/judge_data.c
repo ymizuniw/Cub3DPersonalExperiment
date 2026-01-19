@@ -1,4 +1,4 @@
-#include "map_info.h"
+#include "../../include/map_parser/map_info.h"
 #include <stdio.h>
 #include <string.h>
 

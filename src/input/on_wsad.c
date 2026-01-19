@@ -1,7 +1,7 @@
 #include "../../include/core/game.h"
 #include "../../include/core/player.h"
-#include "minimap_render.h"
-#include "player_move.h"
+#include "../../include/input/minimap_render.h"
+#include "../../include/input/player_move.h"
 
 int	on_wsad(int keycode, t_game *game)
 {

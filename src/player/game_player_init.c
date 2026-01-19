@@ -1,5 +1,5 @@
-#include "game.h"
-#include "player.h"
+#include "../../include/core/game.h"
+#include "../../include/core/player.h"
 
 void	game_player_init(t_game *game)
 {

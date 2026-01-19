@@ -1,5 +1,5 @@
-#include "game.h"
-#include "input.h"
+#include "../../include/core/game.h"
+#include "../../include/core/input.h"
 #include <stdlib.h>
 
 int	on_close(void *param)
