@@ -130,8 +130,7 @@ void	step_until_hit(t_dda *dda, t_map_info *map_info)
 void	seek_perp_dist(t_dda *dda)
 {
 	if (dda->side == 'x')
-		dda->perp_dist = 0; // norm_v2(projection(hit_pos
-							// - player.pos,normal_vec(plane));
+		dda->perp_dist = 0;
 	else
 		dda->perp_dist = 0;
 }
@@ -178,7 +177,6 @@ void	decide_wall_dir(int *wall, t_dda const *dda, t_ray const *ray)
 	}
 }
 
-// why double? wall_col
 void	decide_wall_column(double *wall_col, t_dda const *dda, t_ray const *ray,
 		t_game const *game)
 {
