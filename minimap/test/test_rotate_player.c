@@ -1,4 +1,6 @@
-#include "../includes/game.h"
+#include "../../common/includes/game.h"
+#include "../../common/includes/input.h"
+#include "../includes/minimap_render.h"
 #include "../../parse_map/includes/parser.h"
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "../../parse_map/includes/map_info.h"

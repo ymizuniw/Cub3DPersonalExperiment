@@ -1,4 +1,4 @@
-#include "includes/image.h"
+#include "includes/graphics.h"
 #include <stdlib.h>
 
 void clear_img(t_img *img, int color)

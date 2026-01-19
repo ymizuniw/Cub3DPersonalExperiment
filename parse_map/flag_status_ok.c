@@ -1,7 +1,7 @@
-#include <stdbool.h>
-#include <unistd.h>
 #include "includes/map_info.h"
 #include "includes/parser.h"
+#include <stdbool.h>
+#include <unistd.h>
 
 int	flag_status_ok(const t_map_info *m)
 {

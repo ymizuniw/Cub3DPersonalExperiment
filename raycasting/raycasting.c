@@ -1,8 +1,9 @@
-#include "../minimap/includes/game.h"
+#include "../common/includes/game.h"
 #include "includes/ray.h"
 #include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 typedef struct s_ray
@@ -145,23 +146,80 @@ void	decide_ray_dir(t_ray *ray, int const x, int const map_rows,
 	ray->dir.y = ray->dir.y + plane->pos.y * camera_x;
 }
 
-int	raycasting(t_game *game)
+void	decide_draw_ends(int *draw_start, int *draw_end, int frame_height,
+		float perp_dist)
 {
-	t_ray	ray;
-	t_plane	plane;
-	t_fps	fps;
-	t_dda	dda;
-	int		line_height;
+	int	line_height;
+
+	line_height = frame_height / perp_dist;
+	*draw_start = -line_height / 2 + frame_height / 2;
+	if (*draw_start < 0)
+		*draw_start = 0;
+	*draw_end = line_height / 2 + frame_height / 2;
+	if (*draw_end >= frame_height)
+		*draw_end = frame_height - 1;
+}
+
+void	decide_wall_dir(int *wall, t_dda const *dda, t_ray const *ray)
+{
+	if (dda->side == 'x')
+	{
+		if (ray->dir.x > 0)
+			*wall = EAST;
+		else
+			*wall = WEST;
+	}
+	else
+	{
+		if (ray->dir.y > 0)
+			*wall = NORTH;
+		else
+			*wall = SOUTH;
+	}
+}
+
+// why double? wall_col
+void	decide_wall_column(double *wall_col, t_dda const *dda, t_ray const *ray,
+		t_game const *game)
+{
+	if (dda->side == 0)
+		*wall_col = game->player.pos.y + dda->perp_dist * ray->dir.y;
+	else
+		*wall_col = game->player.pos.x + dda->perp_dist * ray->dir.x;
+}
+
+typedef struct s_draw_ctx
+{
+	int x; // screen column being drawn
 	int		draw_start;
 	int		draw_end;
-	float	ray_angle;
-	char	texture;
-	int		wall;
-	double	wall_x;
+	int		line_height;
+	double wall_x;  // fractional hit position on the wall [0,1)
+	char side;      // 'x' or 'y'
+	int texture_id; // NORTH/SOUTH/EAST/WEST
+}			t_draw_ctx;
+
+void	init_draw_ctx(t_draw_ctx *dc)
+{
+	memset(dc, 0, sizeof(t_draw_ctx));
+}
+
+void	draw_to_frame_buffer(t_game *game, t_draw_ctx const *d)
+{
+}
+
+int	raycasting(t_game *game)
+{
+	t_ray		ray;
+	t_plane		plane;
+	t_fps		fps;
+	t_dda		dda;
+	t_draw_ctx	dc;
 
 	init_ray(&ray, &game->player);
 	init_plane(&plane, 0, 0.66f);
 	init_fps(&fps);
+	init_draw_ctx(&dc);
 	// while (!done())
 	// {
 	for (int x = 0; x < game->frame.w; x++)
@@ -171,37 +229,12 @@ int	raycasting(t_game *game)
 		decide_step_dir(&ray, &dda);
 		step_until_hit(&dda, &game->map_info);
 		seek_perp_dist(&dda);
-		line_height = game->frame.h / dda.perp_dist;
-		draw_start = -line_height / 2 + game->frame.h / 2;
-		if (draw_start < 0)
-			draw_start = 0;
-		draw_end = line_height / 2 + game->frame.h / 2;
-		if (draw_end >= game->frame.h)
-			draw_end = game->frame.h - 1;
-		// ray.angle = atanf(ray.dir.y / ray.dir.x);
-		// the direction is right?
-		if (dda.side == 'x')
-		{
-			if (ray.dir.x > 0)
-				wall = EAST;
-			else
-				wall = WEST;
-		}
-		else
-		{
-			if (ray.dir.y > 0)
-				wall = NORTH;
-			else
-				wall = SOUTH;
-		}
-		if (dda.side == 0)
-			wall_x = game->player.pos.y + dda.perp_dist * ray.dir.y;
-		else
-			wall_x = game->player.pos.x + dda.perp_dist * ray.dir.x;
-		/*
-			if (wall == SOUTH || wall == WEST)
-				texture_width - wall_x
-		*/
+		decide_draw_ends(&dc.draw_start, &dc.draw_end, game->frame.h,
+			dda.perp_dist);
+		decide_wall_dir(&dc.texture_id, &dda, &ray);
+		decide_wall_column(&dc.wall_x, &dda, &ray, game);
+		draw_to_frame_buffer(game, &dc);
 	}
+	// mlx_put_image_to_window(game->mlx, game->);
 	// }
 }
