@@ -265,7 +265,8 @@ int	raycasting(t_game *game)
 	for (int x = 0; x < game->frame.w; x++)
 	{
 		dc.x = x; // Set current screen column
-		decide_ray_dir(&ray, x, game->frame.w, &game->player.plane, &game->player);
+		decide_ray_dir(&ray, x, game->frame.w, &game->player.plane,
+			&game->player);
 		init_dda(&dda, &game->player, &ray);
 		decide_step_dir(&ray, &dda);
 		step_until_hit(&dda, &game->map_info);
