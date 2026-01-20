@@ -1,6 +1,5 @@
 #include "../../include/core/game.h"
 #include "../../include/core/input.h"
-#include "player_move.h"
 #include <stdio.h>
 
 int	on_keypress(int keycode, t_game *game)

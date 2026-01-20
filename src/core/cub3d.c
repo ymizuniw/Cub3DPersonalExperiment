@@ -7,8 +7,6 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int		raycasting(t_game *game);
@@ -34,36 +32,32 @@ void	setup_hooks(t_game *game)
 
 int	main(int argc, char **argv)
 {
-	int fd;
-	t_map_info map_info;
-	int parse_data_ret;
-	t_game game;
-	int game_init_ret;
+	int			fd;
+	t_map_info	map_info;
+	int			parse_data_ret;
+	t_game		game;
+	int			game_init_ret;
 
 	if (argc != 2)
 	{
 		printf("Usage: %s <map_file.cub>\n", argv[0]);
 		return (1);
 	}
-
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 	{
 		printf("Error: Cannot open map file %s\n", argv[1]);
 		return (1);
 	}
-
 	map_info_init(&map_info);
 	parse_data_ret = parse_data(fd, &map_info);
 	close(fd);
-
 	if (parse_data_ret < 0)
 	{
 		printf("Error: Invalid map file format\n");
 		map_info_destroy(&map_info);
 		return (1);
 	}
-
 	game_init_ret = game_init(&game, &map_info, WIN_W, WIN_H);
 	if (game_init_ret < 0)
 	{
@@ -71,16 +65,12 @@ int	main(int argc, char **argv)
 		game_destroy(&game);
 		return (1);
 	}
-
 	setup_hooks(&game);
-
 	printf("Cub3D started successfully!\n");
 	printf("Controls:\n");
 	printf("  WASD - Move\n");
 	printf("  Left/Right arrows - Rotate\n");
 	printf("  ESC or close window - Exit\n");
-
 	mlx_loop(game.mlx);
-
 	return (0);
 }

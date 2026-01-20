@@ -1,5 +1,4 @@
 #include "../../include/core/player.h"
-#include <stdio.h>
 #include <unistd.h>
 
 void	player_set_dir(t_player *player, char c)
@@ -24,6 +23,5 @@ void	player_set_dir(t_player *player, char c)
 		player->dir.x = -1.0f;
 		player->dir.y = 0.0f;
 	}
-	
 	player_init_plane_from_dir(player);
 }

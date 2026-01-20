@@ -1,6 +1,5 @@
-#include "../../vector/includes/vec2.h"
 #include "../../include/core/player.h"
-#include <stdio.h>
+#include "../../vector/includes/vec2.h"
 
 void	rotate_player(t_player *player, float angle_radian)
 {

@@ -1,10 +1,7 @@
-#include "read_data.h"
+#include "../../include/map_parser/read_data.h"
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int	read_line_init(t_read_line *rl, int fd)
