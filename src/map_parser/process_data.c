@@ -1,5 +1,5 @@
 #include "../../include/map_parser/map_info.h"
-#include "parser.h"
+#include "../../include/map_parser/parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

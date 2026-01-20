@@ -1,0 +1,142 @@
+# Cub3D Project Module Documentation
+
+## Directory Structure Overview
+
+### vector/
+2D vector mathematics library for game calculations.
+
+**Files:**
+- `add_v2.c` - Vector addition operations (v1 + v2)
+- `init_v2.c` - Vector initialization with x,y coordinates
+- `normalize_v2.c` - Vector normalization to unit length
+- `rotate_v2.c` - Vector rotation by angle with radian wrapping
+- `subtract_v2.c` - Vector subtraction operations (v1 - v2)
+
+**Purpose:** Mathematical foundation for 2D position/direction calculations, player movement, and camera transformations.
+
+---
+
+## include/ - Header Files
+
+### include/core/
+Core game data structures and function declarations.
+
+**Files:**
+- `game.h` - Main game structure (t_game) containing all game state (player, map, graphics, minimap)
+- `graphics.h` - Graphics utilities: pixel drawing, image clearing, line/rectangle rendering
+- `image.h` - MLX image wrapper structure (t_img) for frame buffer management  
+- `input.h` - Input event handling function declarations for keyboard events
+- `player.h` - Player structure (t_player) with position, direction, and camera plane vectors
+- `ray.h` - Raycasting structures: t_ray, t_dda, t_plane for 3D rendering algorithm
+
+### include/input/
+Input handling and minimap rendering declarations.
+
+**Files:**
+- `minimap_render.h` - Minimap rendering function declarations
+- `minimap.h` - Minimap structure (t_minimap) with origin position and tile size
+- `player_move.h` - Player movement function declarations
+
+### include/map_parser/
+Map file parsing and validation system declarations.
+
+**Files:**
+- `judge_data.h` - Map content type identification (textures, colors, map lines)
+- `map_builder.h` - Map construction utilities for building game map from file data
+- `map_info.h` - Map information structure containing textures, colors, map data
+- `map_normalize_rectangle.h` - Map normalization to rectangular format
+- `map_scan_set_start.h` - Player start position and direction detection
+- `map_validate_closed.h` - Map boundary validation (ensuring walls enclose playable area)
+- `parser.h` - Main parser entry point and coordination functions
+- `process_data.h` - Texture and color line processing functions  
+- `read_data.h` - File reading utilities and line processing
+
+---
+
+## src/ - Source Code Implementation
+
+### src/core/
+Core game initialization, lifecycle, and main loop.
+
+**Files:**
+- `cub3d.c` - **Main entry point.** Handles command line arguments, map parsing, game initialization, MLX setup, and main game loop coordination. Integrates raycasting and minimap rendering.
+- `game_lifecycle.c` - Game state lifecycle management: initialization of game structure, player setup, minimap initialization, and cleanup/destruction functions.
+- `game_mlx.c` - MLX library wrapper functions: window creation, image buffer allocation, MLX initialization with error handling.
+- `on_close.c` - Window close event handler for clean shutdown when user closes window or presses ESC.
+
+### src/graphics/
+Low-level graphics and image manipulation.
+
+**Files:**
+- `clear_img.c` - Clears image buffer to specified color, used for frame initialization each render cycle.
+- `ft_put_pixel.c` - Puts individual pixel to image buffer with bounds checking for safe rendering.
+
+### src/input/
+Input handling, minimap rendering, and drawing utilities.
+
+**Files:**
+- `draw_line.c` - Bresenham line algorithm implementation for drawing lines (used for minimap player direction indicator).
+- `draw_player_dir.c` - Draws player direction line on minimap showing current facing direction.
+- `fill_rect.c` - Fills rectangular areas with solid color (used for minimap walls and player dot).
+- `minimap_render.c` - **Main minimap renderer.** Draws top-down view of map with walls (white), player position (red dot), and direction indicator.
+- `on_keypress.c` - Keyboard event dispatcher routing different keys to appropriate handlers.
+- `on_right_left.c` - Handles left/right arrow keys for player rotation using rotation matrix.
+- `on_wsad.c` - Handles WASD movement keys with collision detection preventing movement into walls.
+
+### src/game_logic/
+Game logic and collision detection.
+
+**Files:**
+- `game_minimap_init.c` - Initializes minimap parameters: origin position, tile size, scaling factors.
+- `is_wall.c` - Collision detection function checking if given map coordinates contain wall ('1') or empty space ('0').
+
+### src/player/
+Player state management and transformations.
+
+**Files:**
+- `game_player_init.c` - Initializes player structure with default position, direction vectors, and camera plane.
+- `player_plane.c` - Calculates camera plane vector perpendicular to direction for proper FOV in raycasting.
+- `player_set_dir.c` - Sets player direction based on map start character (N/S/E/W) with corresponding direction vectors.
+- `rotate_player.c` - Rotates both player direction and camera plane by specified angle using vector rotation.
+
+### src/renderer/
+3D rendering system using raycasting algorithm.
+
+**Files:**
+- `raycasting.c` - **Core 3D renderer.** Implements DDA raycasting algorithm to cast rays from player position, detect wall intersections, calculate wall distances, and render 3D perspective view with proper wall heights and color coding.
+
+### src/map_parser/
+Map file parsing, validation, and processing system.
+
+**Files:**
+- `parse_data.c` - **Main parser coordinator.** Processes each line of map file, identifies content type, delegates to appropriate processors.
+- `read_data.c` - File reading utilities with line buffering and content extraction.
+- `process_data.c` - Processes texture and color definition lines, validates format and ranges.
+- `judge_data.c` - Identifies line content type (texture, color, map, empty) for parsing coordination.
+- `map_builder.c` - Constructs game map from parsed lines, handles dynamic memory allocation.
+- `map_info_fn.c` - Map info structure lifecycle: initialization, validation, and cleanup functions.
+- `map_normalize_rectangle.c` - Converts irregular map shape to rectangular format with padding.
+- `map_scan_set_start.c` - Locates player start position in map and determines initial direction.
+- `map_validate_closed.c` - Validates map boundaries using flood-fill algorithm to ensure no holes.
+- `flag_status_ok.c` - Validates that all required map elements (textures, colors) are present.
+- `ft_putstr_fd.c` - Error message output utility for parser error reporting.
+- `get_next_line.c` - Line-by-line file reading utility for map file processing.
+
+---
+
+## Build System
+
+### Makefile
+Integrated build system compiling all modules:
+- **Vector library:** Direct compilation of vector math functions
+- **Source organization:** Modular compilation with dependency tracking  
+- **Object files:** Organized in `obj/` directory structure
+- **MLX integration:** Links with MinilibX graphics library
+- **Development targets:** Clean, rebuild, debug, and test configurations
+
+### Key Features
+- **3D Raycasting Engine:** Real-time 3D perspective rendering
+- **Minimap Display:** Top-down view with player position and direction  
+- **Input System:** WASD movement + arrow key rotation with collision detection
+- **Map Parser:** Robust .cub file parsing with comprehensive validation
+- **Modular Architecture:** Clean separation of concerns across functional modules
